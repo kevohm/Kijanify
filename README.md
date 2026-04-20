@@ -177,11 +177,21 @@ npm start
 
 ### 4. Database Setup
 
-* Create a PostgreSQL/MySQL database
-* Run migrations:
+* Start PostgreSQL (Docker):
 
 ```bash
-npm run migrate
+cd backend
+docker compose up -d postgres
+```
+
+* Configure env + run migrations:
+
+```bash
+cd backend
+cp .env.example .env
+npm run db:generate
+npm run db:migrate
+npm run db:seed
 ```
 
 ---

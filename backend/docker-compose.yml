@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: kijanify-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: kijanify
+    ports:
+      - "5432:5432"
+    volumes:
+      - kijanify-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d kijanify"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  kijanify-postgres-data:
+
