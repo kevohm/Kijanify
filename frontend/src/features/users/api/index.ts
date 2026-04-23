@@ -1,2 +1,1 @@
-export { listUsers } from "./users.api";
-
+export { listUsers, getUser } from "./users.api";

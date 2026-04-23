@@ -18,7 +18,7 @@ function parseDate(value) {
 
 async function listFields(req, res, next) {
   const assignedAgentId =
-    req.user?.role === user_role.AGENT ? req.user.id : undefined;
+    req.user?.role === user_role.AGENT ? req.user.id : req?.query?.user_id;
   const fields = await FieldService.getFields({ assignedAgentId });
   res.json({
     data: fields,
@@ -47,7 +47,7 @@ async function patchField(req, res, next) {
     return res.status(403).json({ error: "Forbidden" });
   }
 
-  const field = await FieldService.updateFieldStatus(req.params.id, req.body);
+  const field = await FieldService.updateFieldDetails(req.params.id, req.body);
 
   res.json({ data: field });
 }
@@ -61,8 +61,6 @@ async function updateStatus(req, res, next) {
   ) {
     return res.status(403).json({ error: "Forbidden" });
   }
-
-  console.log(req.body)
 
   const field = await FieldService.updateFieldStatus(req.params?.id, req.body);
 

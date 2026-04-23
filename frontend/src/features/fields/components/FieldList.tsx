@@ -1,4 +1,5 @@
 import { useFields } from "../hooks";
+import { Link } from "@tanstack/react-router";
 
 function formatShortDate(value: string): string {
   const dt = new Date(value);
@@ -28,7 +29,12 @@ export function FieldList() {
         const plantingDate = formatShortDate(field.planting_date);
 
         return (
-          <div key={field.id} className="card field-card">
+          <Link
+            key={field.id}
+            to="/fields/$id"
+            params={{ id: field.id }}
+            className="card field-card"
+          >
             <div className="field-card-top">
               <div>
                 <div className="field-name">{field.name}</div>
@@ -46,7 +52,7 @@ export function FieldList() {
               <span className="badge badge--completed">{field.current_stage}</span>
               {field.assigned_agent_id ? (
                 <span className="text-muted" style={{ fontWeight: 700 }}>
-                  Assigned
+                  Assigned to {field.user?.name ?? "Agent"}
                 </span>
               ) : (
                 <span className="text-muted" style={{ fontWeight: 700 }}>
@@ -54,7 +60,7 @@ export function FieldList() {
                 </span>
               )}
             </div>
-          </div>
+          </Link>
         );
       })}
     </div>

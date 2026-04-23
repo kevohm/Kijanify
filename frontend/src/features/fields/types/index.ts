@@ -9,9 +9,15 @@ export type Field = {
   planting_date: string;
   notes: string[];
   assigned_agent_id: string | null;
+  last_status_update?: string;
   created_at: string;
   updated_at: string;
   status?: FieldStatus;
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+  };
 };
 
 export type CreateFieldInput = {
@@ -27,7 +33,12 @@ export type UpdateFieldStatusInput = {
   notes?: string[];
 };
 
+export type UpdateFieldInput = {
+  name?: string;
+  crop_type?: string;
+  planting_date?: string;
+};
+
 export type AssignAgentInput = {
   assigned_agent_id: string;
 };
-

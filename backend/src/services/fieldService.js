@@ -4,6 +4,7 @@ const {
   updateStatusSchema,
   createFieldSchema,
   assignAgentSchema,
+  updateFieldDetailsSchema,
 } = require("../utils/validation");
 const { plant_status } = require("@prisma/client");
 const { computeStatus } = require("../utils/statusUtils");
@@ -56,6 +57,27 @@ const FieldService = {
     }));
   },
 
+  async updateFieldDetails(id, body) {
+    const data = await updateFieldDetailsSchema.parseAsync(body);
+    if (!id) {
+      throw new AppError("Field not found", 404);
+    }
+
+    const hasUpdates = Object.values(data).some((value) => value !== undefined);
+    if (!hasUpdates) {
+      throw new AppError({
+        status: 400,
+        code: "BAD_REQUEST",
+        message: "No updates provided",
+        suggestion: "Provide at least one field to update",
+      });
+    }
+
+    await FieldService.getFieldByIdAndThrow(id);
+    const updated = await FieldModel.updateById(id, data);
+    return { ...updated, status: computeStatus(updated) };
+  },
+
   /**
      *  - Planting stages correlation:
      * - PLANTED: Initial stage when seeds or seedlings are placed in soil
@@ -73,14 +95,13 @@ const FieldService = {
       notes = [...new Set([...notes, ...data.notes])];
     }
     
-    return FieldModel.updateById(id, {
+    const updated = await FieldModel.updateById(id, {
+      last_status_update: new Date(),
       current_stage: data.current_stage,
       ...(data?.notes?.length > 0 ? { notes } : {}),
-      ...(existingField?.planting_date &&
-      data.current_stage === plant_status.PLANTED
-        ? {}
-        : { planting_date: new Date() }),
     });
+
+    return { ...updated, status: computeStatus(updated) };
   },
 
   async assignAgent(fieldId, body) {

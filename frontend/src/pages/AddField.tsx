@@ -1,9 +1,83 @@
 import { useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, Sprout } from "lucide-react";
 import { AddFieldForm } from "../features/fields/components/AddFieldForm";
+import { useMe } from "../features/auth/hooks";
 
 const AddField = () => {
   const navigate = useNavigate();
+  const meQuery = useMe();
+
+  if (!meQuery.isFetching && !meQuery.data) {
+    return (
+      <div className="p-6 lg:p-8 mx-auto bg-white w-full">
+        <button
+          type="button"
+          onClick={() => navigate({ to: "/home" })}
+          className="inline-flex items-center gap-2 text-[13px] font-medium text-[#9A9994] hover:text-[#1A1A18] transition-colors mb-8 group"
+        >
+          <ArrowLeft
+            size={14}
+            className="group-hover:-translate-x-0.5 transition-transform"
+            aria-hidden
+          />
+          Back to dashboard
+        </button>
+
+        <div className="bg-white rounded-2xl border border-[#E4E2DC] p-8 text-center">
+          <div className="text-[15px] font-semibold text-[#1A1A18] mb-1">
+            Sign in required
+          </div>
+          <div className="text-[13px] text-[#6B6B66] mb-5">
+            You need to be signed in to create a new field.
+          </div>
+          <button
+            type="button"
+            onClick={() => navigate({ to: "/login" })}
+            className="inline-flex items-center gap-2 text-[13px] font-semibold text-white px-5 py-2.5 rounded-lg hover:opacity-90 transition-opacity"
+            style={{ background: "#2D6A4F" }}
+          >
+            Go to login →
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!meQuery.isFetching && meQuery.data && meQuery.data.role !== "ADMIN") {
+    return (
+      <div className="p-6 lg:p-8 mx-auto bg-white w-full">
+        <button
+          type="button"
+          onClick={() => navigate({ to: "/home" })}
+          className="inline-flex items-center gap-2 text-[13px] font-medium text-[#9A9994] hover:text-[#1A1A18] transition-colors mb-8 group"
+        >
+          <ArrowLeft
+            size={14}
+            className="group-hover:-translate-x-0.5 transition-transform"
+            aria-hidden
+          />
+          Back to dashboard
+        </button>
+
+        <div className="bg-white rounded-2xl border border-[#E4E2DC] p-8 text-center">
+          <div className="text-[15px] font-semibold text-[#1A1A18] mb-1">
+            Admin access required
+          </div>
+          <div className="text-[13px] text-[#6B6B66] mb-5">
+            Only Admins can create new fields.
+          </div>
+          <button
+            type="button"
+            onClick={() => navigate({ to: "/home" })}
+            className="inline-flex items-center gap-2 text-[13px] font-semibold text-white px-5 py-2.5 rounded-lg hover:opacity-90 transition-opacity"
+            style={{ background: "#2D6A4F" }}
+          >
+            Go to dashboard →
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

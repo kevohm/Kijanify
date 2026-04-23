@@ -54,6 +54,12 @@ const assignAgentSchema = z.object({
   assigned_agent_id: z.cuid({ error: "Please provide a valid agent ID" }),
 });
 
+const updateFieldDetailsSchema = z.object({
+  name: z.string().min(1).optional(),
+  crop_type: z.string().min(1).optional(),
+  planting_date: z.coerce.date().optional(),
+});
+
 module.exports = {
   loginSchema,
   signupSchema,
@@ -61,4 +67,5 @@ module.exports = {
   createFieldSchema,
   updateStatusSchema,
   assignAgentSchema,
+  updateFieldDetailsSchema,
 };

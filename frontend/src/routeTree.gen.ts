@@ -9,12 +9,21 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UsersRouteImport } from './routes/users'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as AddFieldRouteImport } from './routes/add-field'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as UsersIndexRouteImport } from './routes/users.index'
+import { Route as UsersIdRouteImport } from './routes/users.$id'
+import { Route as FieldsIdRouteImport } from './routes/fields.$id'
 
+const UsersRoute = UsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
@@ -40,6 +49,21 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UsersIndexRoute = UsersIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => UsersRoute,
+} as any)
+const UsersIdRoute = UsersIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => UsersRoute,
+} as any)
+const FieldsIdRoute = FieldsIdRouteImport.update({
+  id: '/fields/$id',
+  path: '/fields/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +71,10 @@ export interface FileRoutesByFullPath {
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/users': typeof UsersRouteWithChildren
+  '/fields/$id': typeof FieldsIdRoute
+  '/users/$id': typeof UsersIdRoute
+  '/users/': typeof UsersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +82,9 @@ export interface FileRoutesByTo {
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/fields/$id': typeof FieldsIdRoute
+  '/users/$id': typeof UsersIdRoute
+  '/users': typeof UsersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,13 +93,44 @@ export interface FileRoutesById {
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/users': typeof UsersRouteWithChildren
+  '/fields/$id': typeof FieldsIdRoute
+  '/users/$id': typeof UsersIdRoute
+  '/users/': typeof UsersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/add-field' | '/home' | '/login' | '/register'
+  fullPaths:
+    | '/'
+    | '/add-field'
+    | '/home'
+    | '/login'
+    | '/register'
+    | '/users'
+    | '/fields/$id'
+    | '/users/$id'
+    | '/users/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/add-field' | '/home' | '/login' | '/register'
-  id: '__root__' | '/' | '/add-field' | '/home' | '/login' | '/register'
+  to:
+    | '/'
+    | '/add-field'
+    | '/home'
+    | '/login'
+    | '/register'
+    | '/fields/$id'
+    | '/users/$id'
+    | '/users'
+  id:
+    | '__root__'
+    | '/'
+    | '/add-field'
+    | '/home'
+    | '/login'
+    | '/register'
+    | '/users'
+    | '/fields/$id'
+    | '/users/$id'
+    | '/users/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,10 +139,19 @@ export interface RootRouteChildren {
   HomeRoute: typeof HomeRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
+  UsersRoute: typeof UsersRouteWithChildren
+  FieldsIdRoute: typeof FieldsIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/users': {
+      id: '/users'
+      path: '/users'
+      fullPath: '/users'
+      preLoaderRoute: typeof UsersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/register': {
       id: '/register'
       path: '/register'
@@ -116,8 +187,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/users/': {
+      id: '/users/'
+      path: '/'
+      fullPath: '/users/'
+      preLoaderRoute: typeof UsersIndexRouteImport
+      parentRoute: typeof UsersRoute
+    }
+    '/users/$id': {
+      id: '/users/$id'
+      path: '/$id'
+      fullPath: '/users/$id'
+      preLoaderRoute: typeof UsersIdRouteImport
+      parentRoute: typeof UsersRoute
+    }
+    '/fields/$id': {
+      id: '/fields/$id'
+      path: '/fields/$id'
+      fullPath: '/fields/$id'
+      preLoaderRoute: typeof FieldsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
+
+interface UsersRouteChildren {
+  UsersIdRoute: typeof UsersIdRoute
+  UsersIndexRoute: typeof UsersIndexRoute
+}
+
+const UsersRouteChildren: UsersRouteChildren = {
+  UsersIdRoute: UsersIdRoute,
+  UsersIndexRoute: UsersIndexRoute,
+}
+
+const UsersRouteWithChildren = UsersRoute._addFileChildren(UsersRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -125,6 +229,8 @@ const rootRouteChildren: RootRouteChildren = {
   HomeRoute: HomeRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
+  UsersRoute: UsersRouteWithChildren,
+  FieldsIdRoute: FieldsIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

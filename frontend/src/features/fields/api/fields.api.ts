@@ -3,6 +3,7 @@ import type {
   AssignAgentInput,
   CreateFieldInput,
   Field,
+  UpdateFieldInput,
   UpdateFieldStatusInput,
 } from "../types";
 
@@ -17,6 +18,13 @@ function unwrapData<T>(payload: T | DataResponse<T>): T {
 
 export async function listFields(): Promise<Field[]> {
   const res = await api.get<DataResponse<Field[]>>("/fields");
+  return res.data.data;
+}
+
+export async function listFieldsForUser(userId: string): Promise<Field[]> {
+  const res = await api.get<DataResponse<Field[]>>("/fields", {
+    params: { user_id: userId },
+  });
   return res.data.data;
 }
 
@@ -38,6 +46,14 @@ export async function updateFieldStatus(
   return res.data.data;
 }
 
+export async function updateField(
+  id: string,
+  input: UpdateFieldInput,
+): Promise<Field> {
+  const res = await api.patch<DataResponse<Field>>(`/fields/${id}`, input);
+  return res.data.data;
+}
+
 export async function assignAgent(
   id: string,
   input: AssignAgentInput,
@@ -45,4 +61,3 @@ export async function assignAgent(
   const res = await api.post<DataResponse<Field>>(`/fields/${id}/assign`, input);
   return res.data.data;
 }
-

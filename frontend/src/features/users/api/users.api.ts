@@ -10,3 +10,7 @@ export async function listUsers(params: ListUsersParams = {}): Promise<User[]> {
   return res.data;
 }
 
+export async function getUser(id: string): Promise<User> {
+  const res = await api.get<User>(`/users/${id}`);
+  return res.data;
+}

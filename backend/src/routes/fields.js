@@ -16,8 +16,8 @@ router.use(authenticate);
 router.get("/", listFields);
 router.get("/:id", getField);
 router.post("/", authorize(user_role.ADMIN), createField);
-router.patch("/:id", authorize(user_role.ADMIN, user_role.AGENT), patchField);
+router.patch("/:id", authorize(user_role.ADMIN), patchField);
 router.post("/:id/assign", authorize(user_role.ADMIN), assignAgent);
-router.post("/:id/status", authorize(user_role.ADMIN), updateStatus);
+router.post("/:id/status", authorize(user_role.ADMIN, user_role.AGENT), updateStatus);
 
 module.exports = router;

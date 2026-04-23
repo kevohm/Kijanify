@@ -62,6 +62,7 @@ router.get("/health", healthHandler);
 
 router.use("/auth", require("./auth"));
 router.use("/fields", require("./fields"));
+router.use("/dashboard", require("./dashboard"));
 router.use("/users", require("./users"));
 
 module.exports = router;

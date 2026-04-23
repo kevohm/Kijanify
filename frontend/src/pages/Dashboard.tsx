@@ -132,14 +132,24 @@ export const Dashboard = () => {
           </p>
         </div>
         <div className="flex items-center gap-2.5">
-          <Link
-            to={"/add-field"}
-            type="button"
-            className="inline-flex items-center gap-2 text-[13px] font-semibold text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
-            style={{ background: "#2D6A4F" }}
-          >
-            + Create Field
-          </Link>
+          {meQuery.data?.role === "ADMIN" ? (
+            <>
+              <Link
+                to={"/add-field"}
+                type="button"
+                className="inline-flex items-center gap-2 text-[13px] font-semibold text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
+                style={{ background: "#2D6A4F" }}
+              >
+                + Create Field
+              </Link>
+              <Link
+                to={"/users"}
+                className="inline-flex items-center text-[13px] font-semibold text-[#4A4A46] px-4 py-2 rounded-lg border border-[#D8D6CF] bg-white hover:border-[#BFBDB6] transition-colors"
+              >
+                Users
+              </Link>
+            </>
+          ) : null}
           {/* <button
             type="button"
             className="inline-flex items-center text-[13px] font-semibold text-[#4A4A46] px-4 py-2 rounded-lg border border-[#D8D6CF] bg-white hover:border-[#BFBDB6] transition-colors"

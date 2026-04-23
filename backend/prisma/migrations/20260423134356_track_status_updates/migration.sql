@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "field" ADD COLUMN     "last_status_update" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
