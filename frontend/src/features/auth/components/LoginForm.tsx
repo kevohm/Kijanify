@@ -19,7 +19,7 @@ export function LoginForm(props: { onSuccess?: () => void }) {
       props.onSuccess?.();
       
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Login failed");
+      toast.error( "Login failed");
     }
 
   }

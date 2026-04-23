@@ -10,7 +10,9 @@ import { useUsers } from "../../users/hooks";
 const createFieldSchema = z.object({
   name: z.string().min(1),
   crop_type: z.string().min(1),
-  planting_date: z.coerce.date(),
+  planting_date: z.string().refine((date) => !isNaN(Date.parse(date)), {
+    message: "Invalid date format",
+  }),
   notes: z.array(z.string()).optional().default([]),
   assigned_agent_id: z.string().optional().nullable(),
 });
@@ -56,26 +58,22 @@ export function AddFieldForm(props: { onSuccess?: () => void }) {
     const payload: CreateFieldInput = {
       name: name.trim(),
       crop_type: cropType.trim(),
-      planting_date: new Date(plantingDate),
+      planting_date: new Date(plantingDate).toISOString(),
       notes,
       assigned_agent_id: assignedAgentId || null,
     };
-    let parsed;
-    try {
-      parsed = await createFieldSchema.parseAsync(payload);
-    } catch (error) {
-      console.error("Validation error:", error);
-      toast.error("Please fill in all required fields.");
-      return;
-    }
-
 
     try {
-      await createField.mutateAsync(parsed?.data);
+      const parsed = await createFieldSchema.parseAsync(payload);
+      await createField.mutateAsync(parsed);
       toast.success("Field created successfully.");
       props.onSuccess?.();
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Failed to create field.");
+      if (error instanceof z.ZodError) {
+        toast.error("Please fill in all required fields.");
+        return;
+      }
+      toast.error("Failed to create field.");
     }
   }
 
