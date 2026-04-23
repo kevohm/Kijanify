@@ -19,7 +19,11 @@ app.use(
     origin:
       corsOrigins.length > 0
         ? corsOrigins
-        : ["http://localhost:5173", "http://127.0.0.1:5173"],
+        : [
+            "http://localhost:5173",
+            "http://127.0.0.1:5173",
+            "https://kijanify-modern.vercel.app",
+          ],
     credentials: true,
   }),
 );
@@ -32,7 +36,13 @@ app.use(passport.initialize());
 app.use("/v1/api", require("./routes/index"));
 
 app.use((req, res, next) => {
-  next(new AppError({ status: 404, code: "NOT_FOUND", message: "Route not found" }));
+  next(
+    new AppError({
+      status: 404,
+      code: "NOT_FOUND",
+      message: "Route not found",
+    }),
+  );
 });
 
 app.use(errorHandler);
