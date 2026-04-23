@@ -9,7 +9,20 @@ const configurePassport = require("./config/passport");
 
 const app = express();
 
-app.use(cors());
+const corsOrigins = (process.env.CORS_ORIGIN || "")
+  .split(",")
+  .map((value) => value.trim())
+  .filter(Boolean);
+
+app.use(
+  cors({
+    origin:
+      corsOrigins.length > 0
+        ? corsOrigins
+        : ["http://localhost:5173", "http://127.0.0.1:5173"],
+    credentials: true,
+  }),
+);
 app.use(traceId);
 app.use(express.json());
 
@@ -25,4 +38,3 @@ app.use((req, res, next) => {
 app.use(errorHandler);
 
 module.exports = app;
-
