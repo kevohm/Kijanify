@@ -1,6 +1,4 @@
 import { Link } from "@tanstack/react-router";
-import heroImageUrl from "../assets/hero.png";
-import { getAuthToken } from "../lib/auth-token";
 import Logo from "../components/ui/Logo";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -74,7 +72,6 @@ const lifecycleStages = [
 // ─── Landing ─────────────────────────────────────────────────────────────────
 
 const Landing: React.FC = () => {
-  const authToken = getAuthToken();
 
   const primaryCta: CtaLink = { to: "/login", label: "Sign in" };
 

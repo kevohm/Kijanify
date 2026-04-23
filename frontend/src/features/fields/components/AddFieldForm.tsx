@@ -7,7 +7,7 @@ import { useUsers } from "../../users/hooks";
 
 // ─── Schema (mirrors backend) ────────────────────────────────────────────────
 
-export const createFieldSchema = z.object({
+const createFieldSchema = z.object({
   name: z.string().min(1),
   crop_type: z.string().min(1),
   planting_date: z.coerce.date(),
@@ -30,7 +30,7 @@ const selectClass =
 
 export function AddFieldForm(props: { onSuccess?: () => void }) {
   const createField = useCreateField();
-  const agentsQuery = useUsers({role:"AGENT"}); // { data: Agent[] } — supply your own hook
+  const agentsQuery = useUsers({ role: "AGENT" }); // { data: Agent[] } — supply your own hook
 
   const [name, setName] = useState("");
   const [cropType, setCropType] = useState("");
@@ -60,21 +60,22 @@ export function AddFieldForm(props: { onSuccess?: () => void }) {
       notes,
       assigned_agent_id: assignedAgentId || null,
     };
-
-    const parsed = createFieldSchema.safeParse(payload);
-    if (!parsed.success) {
+    let parsed;
+    try {
+      parsed = await createFieldSchema.parseAsync(payload);
+    } catch (error) {
+      console.error("Validation error:", error);
       toast.error("Please fill in all required fields.");
       return;
     }
+
 
     try {
       await createField.mutateAsync(parsed?.data);
       toast.success("Field created successfully.");
       props.onSuccess?.();
     } catch (error) {
-      toast.error(
-        (error as any)?.response?.data?.message || "Failed to create field.",
-      );
+      toast.error(error?.response?.data?.message || "Failed to create field.");
     }
   }
 

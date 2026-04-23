@@ -2,7 +2,6 @@ import { Link } from "@tanstack/react-router";
 import { type ReactNode } from "react";
 import { getAuthToken } from "../lib/auth-token";
 import { useLogout, useMe } from "../features/auth/hooks";
-import { Grid2X2, Search } from "lucide-react";
 import Logo from "../components/ui/Logo";
 
 function initialsFromName(name: string | undefined): string {

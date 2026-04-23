@@ -1,8 +1,6 @@
 import * as React from "react";
-import { Outlet, createRootRoute, useRouterState } from "@tanstack/react-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-import { AppShell } from "../components/layout/AppShell";
+import { Outlet, createRootRoute } from "@tanstack/react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { Toaster } from "react-hot-toast";
 
 export const Route = createRootRoute({
@@ -12,8 +10,8 @@ export const Route = createRootRoute({
 
 const queryClient = new QueryClient();
 function RootComponent() {
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const isAppRoute = pathname.startsWith("/home");
+  // const pathname = useRouterState({ select: (s) => s.location.pathname });
+
 
   return (
     <React.Fragment>

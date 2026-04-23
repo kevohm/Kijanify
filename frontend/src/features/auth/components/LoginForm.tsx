@@ -4,12 +4,7 @@ import { useState } from "react";
 import { useLogin } from "../hooks";
 import toast from "react-hot-toast";
 
-function getErrorMessage(error: unknown): string {
-  if (!error) return "Something went wrong";
-  if (typeof error === "string") return error;
-  if (error instanceof Error) return error?.response?.data?.message;
-  return "Something went wrong";
-}
+
 
 export function LoginForm(props: { onSuccess?: () => void }) {
   const loginMutation = useLogin();
