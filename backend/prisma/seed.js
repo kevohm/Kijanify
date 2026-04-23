@@ -31,28 +31,26 @@ async function main() {
     plainPassword: "#Password123",
   });
 
-  await prisma.field.create({
-    data: {
-      name: "North Farm",
-      crop_type: "Maize",
-      planting_date: new Date("2026-03-25"),
-      current_stage: plant_status.GROWING,
-      assigned_agent_id: agent.id,
-      last_updated: new Date("2026-04-15"),
-      notes: ["Initial planting complete"],
-    },
-  });
-
-  await prisma.field.create({
-    data: {
-      name: "South Plot",
-      crop_type: "Beans",
-      planting_date: new Date("2026-04-01"),
-      current_stage: plant_status.GROWING,
-      assigned_agent_id: agent.id,
-      last_updated: new Date("2026-04-12"),
-      notes: ["Soil moisture good"],
-    },
+  await prisma.field.createMany({
+    data: [
+      {
+        name: "North Farm",
+        crop_type: "Maize",
+        planting_date: new Date("2026-03-25"),
+        current_stage: plant_status.GROWING,
+        ...(agent?.id ? { assigned_agent_id: agent?.id } : {}),
+        notes: ["Initial planting complete"],
+      },
+      {
+        name: "South Plot",
+        crop_type: "Beans",
+        planting_date: new Date("2026-04-01"),
+        current_stage: plant_status.GROWING,
+        ...(agent?.id ? { assigned_agent_id: agent?.id } : {}),
+        notes: ["Soil moisture good"],
+      },
+    ],
+    skipDuplicates: true,
   });
 
   console.log("Seeded demo users + fields:");

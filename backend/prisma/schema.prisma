@@ -38,7 +38,7 @@ model field {
   planting_date     DateTime
   notes             String[]
   assigned_agent_id String?
-  user              user?         @relation(fields: [assigned_agent_id], references: [id])
+  user              user?         @relation(fields: [assigned_agent_id], references: [id], onDelete: SetNull)
   created_at        DateTime      @default(now())
   updated_at        DateTime      @updatedAt
 }
