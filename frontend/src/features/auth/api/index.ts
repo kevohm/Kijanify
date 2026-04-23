@@ -1,2 +1,1 @@
-export { getMe, login, signup } from "./auth.api";
-
+export { getMe, login, logout, refreshSession, signup } from "./auth.api";

@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 
-import { getAuthToken } from "../../lib/auth-token";
 import { useLogout, useMe } from "../../features/auth/hooks";
 
 function initialsFromName(name: string | undefined): string {
@@ -86,7 +85,6 @@ function Icon({
 }
 
 export function AppShell({ children }: { children: ReactNode }) {
-  const token = getAuthToken();
   const meQuery = useMe();
   const logout = useLogout();
 
@@ -164,7 +162,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               </Link>
             )}
 
-            {token ? (
+            {user ? (
               <button className="btn btn--ghost" type="button" onClick={logout}>
                 Logout
               </button>
@@ -177,4 +175,3 @@ export function AppShell({ children }: { children: ReactNode }) {
     </div>
   );
 }
-

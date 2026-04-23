@@ -1,6 +1,10 @@
 const Strategy = require("passport-strategy");
+const { ACCESS_TOKEN_COOKIE_NAME } = require("../utils/auth");
 
 function defaultGetToken(req) {
+  const cookieToken = req?.cookies?.[ACCESS_TOKEN_COOKIE_NAME];
+  if (cookieToken && typeof cookieToken === "string") return cookieToken;
+
   const authHeader = req?.headers?.authorization;
   if (!authHeader || typeof authHeader !== "string") return null;
   if (!authHeader.startsWith("Bearer ")) return null;
@@ -20,7 +24,7 @@ class JwtStrategy extends Strategy {
     try {
       const token = this._getToken(req);
       if (!token) {
-        return this.fail({ message: "Authorization header missing" }, 401);
+        return this.fail({ message: "Access token missing" }, 401);
       }
 
       let payload;
@@ -43,4 +47,3 @@ class JwtStrategy extends Strategy {
 }
 
 module.exports = JwtStrategy;
-

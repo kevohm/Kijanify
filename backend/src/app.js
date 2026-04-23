@@ -3,6 +3,7 @@ const cors = require("cors");
 const passport = require("passport");
 
 const { AppError } = require("./utils/appError");
+const { cookieParser } = require("./utils/cookies");
 const traceId = require("./middleware/traceId");
 const errorHandler = require("./middleware/errorHandler");
 const configurePassport = require("./config/passport");
@@ -29,6 +30,7 @@ app.use(
 );
 app.use(traceId);
 app.use(express.json());
+app.use(cookieParser);
 
 configurePassport(passport);
 app.use(passport.initialize());

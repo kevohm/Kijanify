@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import { type ReactNode } from "react";
-import { getAuthToken } from "../lib/auth-token";
 import { useLogout, useMe } from "../features/auth/hooks";
 import Logo from "../components/ui/Logo";
 
@@ -14,7 +13,6 @@ function initialsFromName(name: string | undefined): string {
 }
 
 const DashboardWrapper = ({ children }: { children: ReactNode }) => {
-  const token = getAuthToken();
   const meQuery = useMe();
   const logout = useLogout();
   const user = meQuery.data;
@@ -56,7 +54,7 @@ const DashboardWrapper = ({ children }: { children: ReactNode }) => {
               </Link>
             )}
 
-            {token && (
+            {user ? (
               <>
                 <div className="w-px h-5 bg-[#E4E2DC]" />
                 <button
@@ -67,7 +65,7 @@ const DashboardWrapper = ({ children }: { children: ReactNode }) => {
                   Logout
                 </button>
               </>
-            )}
+            ) : null}
           </div>
         </header>
 

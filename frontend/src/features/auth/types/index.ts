@@ -20,7 +20,5 @@ export type SignupInput = {
 };
 
 export type AuthSuccess = {
-  token: string;
   user: SafeUser;
 };
-
